@@ -43,7 +43,7 @@ struct AppModel : Decodable {  /// comment is appstore properties.
     let primaryGenreId : Int?           // Primary category IDs
     let primaryGenreName : String?      // Primary category
     let genreIds : [String]?            // All categories IDs
-    let screenshotUrls: [String]?       // 스크린샷 URLs
+    let screenshotUrls: [String]?       // Screenshots URLs
     let features: [String]?             // Support device
     let averageUserRatingForCurrentVersion : Double?
     let userRatingCountForCurrentVersion : Int?

@@ -8,5 +8,5 @@ import Combine
 
 protocol APIService {
     associatedtype T
-    func searchBy(title: String) -> AnyPublisher<[T], Error>
+    func run(keyword: String) async throws -> T?
 }

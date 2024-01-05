@@ -10,7 +10,6 @@ import CoreData
 
 
 extension LocalImage {
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<LocalImage> {
         return NSFetchRequest<LocalImage>(entityName: "LocalImage")
     }

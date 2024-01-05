@@ -7,12 +7,10 @@
 import SwiftUI
 
 struct SearchCell: View {
-    @State private var icon: UIImage?
-    @State private var screenShots: [UIImage] = [UIImage]()
+    @Binding private var displayData: AppDisplayData
     @Environment(\.openURL) var openURL
     
     private let placeholderImg = UIImage(named: "placeholder")!
-    private let displayData: AppDisplayData
     
     init(data: AppDisplayData) {
         self.displayData = data
@@ -22,16 +20,15 @@ struct SearchCell: View {
         VStack(alignment: .leading) {
             HStack {
                 // App Icon image
-                Image(uiImage: icon ?? placeholderImg)
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .onAppear {
-                        self.displayData.fetchImage { image in
-                            self.icon = image
-                        }
-                    }
-                    .cornerRadius(12)
-                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                AsyncImage(url: displayData.icon) { image in
+                    image.resizable()
+                } placeholder: {
+                    Image(uiImage: placeholderImg)
+                }
+                .frame(width: 50, height: 50)
+                .cornerRadius(12)
+                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                
                 
                 // Title and Seller
                 VStack(alignment: .leading) {
@@ -73,8 +70,8 @@ struct SearchCell: View {
             
             /// ScreenShots Stack
             HStack(alignment: .center) {
-                if screenShots.count > 0 {
-                    ForEach(screenShots, id: \.self) { image in
+                if displayData.screenshotUrls?.count > 0 {
+                    ForEach(displayData.screenshotUrls, id: \.self) { image in
                         Image(uiImage: image)
                             .resizable()
                             .cornerRadius(8)
@@ -102,11 +99,7 @@ struct SearchCell: View {
     }
 }
 
-#if DEBUG
-struct SearchBookCell_Previews : PreviewProvider {
-    static var previews: some View {
-        SearchCell(data: Dummy.displayData)
-            .previewDisplayName("SearchBookCell")
-    }
+#Preview {
+    SearchCell(data: Dummy.displayData)
+        .previewDisplayName("SearchBookCell")
 }
-#endif
