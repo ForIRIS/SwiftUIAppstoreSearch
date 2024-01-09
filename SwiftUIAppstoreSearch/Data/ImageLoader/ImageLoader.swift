@@ -39,60 +39,68 @@ final class ImageLoader {
 }
 
 extension ImageLoader {
-    func loadImage(from string: String, date:Date) -> AnyPublisher< UIImage?, Never > {
-        return loadImage(from: URL(string: string)!, date:date)
+    func loadImage(from urlString: String, date:Date) async throws -> UIImage? {
+        guard let url = URL(string: urlString) else { throw NetworkError.badUrl }
+        return try await locdImage(from: url, date:date)
     }
     
-    func loadImage(from url: URL, date:Date) -> AnyPublisher< UIImage?, Never > {
-        // Check from image cache!
-        if let image = cache[url] {
-            return Just(image).eraseToAnyPublisher()
-        }
+    func locdImage(from url: URL, date:Date) async throws -> UIImage? {
+        if let image = cache[url] { return image }
         
-        let request = LocalImage.fetchRequest()
-        request.predicate = NSPredicate(format: "url = %@", url.path)
-        
-        let context = container.viewContext
-        
-        do {
-            let localImageInfos = try context.fetch(request)
-            
-            if localImageInfos.count > 0 {
-                let imageInfo = localImageInfos[0]
-                
-                if let diff = imageInfo.datetime?.diffHours(date), diff < 12 {
-                    /// If previous download image is less than 12 hours? load from local
-                    let path = documents.appendingPathExtension(url.path.replacingOccurrences(of: "/", with: "_"))
-                    self.cache[url] = loadImageFromLocal(from: path)
-                    
-                    if let image = cache[url] {
-                        return Just(image).eraseToAnyPublisher()
-                    }
-                } else {
-                    self.dataQueue.sync(flags:.barrier) {
-                        context.delete(imageInfo)
-                        saveContext()
-                    }
-                }
-            }
-            
-            return loadImageFromRemote(from: url)
-        } catch {
-            let nserror = error as NSError
-            fatalError("❗️Unresolved Error \(nserror.localizedDescription)\n\(nserror.userInfo)")
-        }
+//        let request = LocalImage.fetchRequest()
+        return nil
     }
+    
+//    func loadImage(from url: URL, date:Date) -> AnyPublisher< UIImage?, Never > {
+//        // Check from image cache!
+//        if let image = cache[url] {
+//            return Just(image).eraseToAnyPublisher()
+//        }
+//        
+//        let request = LocalImage.fetchRequest()
+//        request.predicate = NSPredicate(format: "url = %@", url.path)
+//        
+//        let context = container.viewContext
+//        
+//        do {
+//            let localImageInfos = try context.fetch(request)
+//            
+//            if localImageInfos.count > 0 {
+//                let imageInfo = localImageInfos[0]
+//                
+//                if let diff = imageInfo.datetime?.diffHours(date), diff < 12 {
+//                    /// If previous download image is less than 12 hours? load from local
+//                    let path = documents.appendingPathExtension(url.path.replacingOccurrences(of: "/", with: "_"))
+//                    self.cache[url] = loadImageFromLocal(from: path)
+//                    
+//                    if let image = cache[url] {
+//                        return Just(image).eraseToAnyPublisher()
+//                    }
+//                } else {
+//                    self.dataQueue.sync(flags:.barrier) {
+//                        context.delete(imageInfo)
+//                        saveContext()
+//                    }
+//                }
+//            }
+//            
+//            return loadImageFromRemote(from: url)
+//        } catch {
+//            let nserror = error as NSError
+//            fatalError("❗️Unresolved Error \(nserror.localizedDescription)\n\(nserror.userInfo)")
+//        }
+//    }
 }
 
 extension ImageLoader {
     func saveImageInfo(from url: URL, date:Date) {
-        self.dataQueue.sync(flags:.barrier) {
-            let localImageInfo = LocalImage(context: container.viewContext)
-            localImageInfo.url = url.path
-            localImageInfo.datetime = date
-            
-            self.saveContext()
-        }
+//        self.dataQueue.sync(flags:.barrier) {
+//            let localImageInfo = LocalImage(context: container.viewContext)
+//            localImageInfo.url = url.path
+//            localImageInfo.datetime = date
+//            
+//            self.saveContext()
+//        }
     }
 }
 

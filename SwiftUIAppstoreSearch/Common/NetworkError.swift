@@ -9,6 +9,6 @@ enum NetworkError: Error {
     case invalidQueries
     case invalidRequest
     case badResponse
-    case badStatus
+    case badStatus(Int)
     case failedToDecodeResponse
 }

@@ -5,6 +5,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct SwiftUIAppstoreSearchApp: App {
@@ -12,5 +13,6 @@ struct SwiftUIAppstoreSearchApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [AppInfo.self])
     }
 }

@@ -13,4 +13,8 @@ extension Date {
         return ti / 3600
     }
 
+    func toISO8601String() -> String {
+        let formatter = ISO8601DateFormatter()
+        return formatter.string(from: self)
+    }
 }

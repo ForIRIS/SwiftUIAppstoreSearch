@@ -7,38 +7,38 @@
 import SwiftUI
 
 struct AppBasicInfoView : View {
-    @Binding var icon: UIImage?
     @Environment(\.openURL) private var openURL
     
-    let displayData: AppDisplayData
+    let info: AppInfo
     private let placeholderImg = UIImage(named: "placeholder")!
     
     var body: some View {
         HStack {
-            Image(uiImage: icon ?? placeholderImg)
-                .resizable()
-                .frame(width: 120, height: 120)
-                .cornerRadius(16)
-                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+            AsyncImage(url: URL(string:info.iconUrl)) { image in
+                image
+                    .resizable()
+                    .frame(width: 120, height: 120)
+                    .cornerRadius(16)
+            } placeholder: {
+                Image(uiImage: placeholderImg)
+            }
+            .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
             
             VStack {
                 HStack {
                     VStack(alignment: .leading) {
-                        Text(displayData.title)
+                        Text(info.name)
                             .font(.title2)
                             .fontWeight(.medium)
                             .lineLimit(2)
                         
                         Spacer(minLength: 2)
                         
-                        if let seller = displayData.seller {
-                            Text(seller)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .lineLimit(1)
-                        } else {
-                            Spacer(minLength: 10)
-                        }
+                        Text(info.seller)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                        
                         Spacer(minLength: 2)
                     }
                     Spacer()
@@ -46,16 +46,14 @@ struct AppBasicInfoView : View {
                 
                 Spacer()
                 HStack {
-                    if let appUrl = displayData.appUrl, appUrl.count > 0 {
+                    if let appUrl = URL(string: info.appURL) {
                         Button {
+                            openURL(appUrl)
                         } label: {
                             Text("Get")
                                 .font(.subheadline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                                .onTapGesture {
-                                    openURL(URL(string: appUrl)!)
-                                }
                         }
                         .frame(width:64, height:26)
                         .background(.blue)
@@ -65,7 +63,7 @@ struct AppBasicInfoView : View {
                     Spacer()
                     
                     Button {
-                        guard let appurl = self.displayData.appUrl, let data = URL(string: appurl) else { return }
+                        guard let data = URL(string: info.appURL) else { return }
                         
                         let av = UIActivityViewController(activityItems: [data], applicationActivities: nil)
                         
@@ -88,4 +86,8 @@ struct AppBasicInfoView : View {
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 15))
         }
     }
+}
+
+#Preview {
+    AppBasicInfoView(info: AppInfo(id: 1, name: "Test"))
 }

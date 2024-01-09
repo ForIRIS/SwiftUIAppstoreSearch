@@ -53,3 +53,7 @@ struct StarRatingView : View {
             .foregroundColor(.gray)
     }
 }
+
+#Preview {
+    StarRatingView(3.5)
+}

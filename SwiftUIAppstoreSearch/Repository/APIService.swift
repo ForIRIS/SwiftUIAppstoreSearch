@@ -8,5 +8,5 @@ import Combine
 
 protocol APIService {
     associatedtype T
-    func run(keyword: String) async throws -> T?
+    func run(with keyword: String) async throws -> T?
 }

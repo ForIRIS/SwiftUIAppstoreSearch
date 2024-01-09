@@ -7,13 +7,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var navPath = NavigationPath()
+    
     var body: some View {
-        SearchView()
+        ZStack {
+            NavigationStack(path: $navPath) {
+                SearchView()
+                    .navigationDestination(for: AppInfo.self) { appInfo in
+                        AppDetailView(info: appInfo)
+                    }
+                    .navigationDestination(for: [AppInfo].self) { appInfos in
+                        SearchResultView(list: appInfos)
+                    }
+            }
+        }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }
