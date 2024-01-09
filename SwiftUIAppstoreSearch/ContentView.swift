@@ -10,16 +10,15 @@ struct ContentView: View {
     @State private var navPath = NavigationPath()
     
     var body: some View {
-        ZStack {
-            NavigationStack(path: $navPath) {
-                SearchView()
-                    .navigationDestination(for: AppInfo.self) { appInfo in
-                        AppDetailView(info: appInfo)
-                    }
-                    .navigationDestination(for: [AppInfo].self) { appInfos in
-                        SearchResultView(list: appInfos)
-                    }
-            }
+        NavigationStack(path: $navPath) {
+            SearchView()
+                .navigationTitle("Search")
+                .navigationDestination(for: AppInfo.self) { appInfo in
+                    AppDetailView(info: appInfo)
+                }
+                .navigationDestination(for: [AppInfo].self) { appInfos in
+                    SearchResultView(list: appInfos)
+                }
         }
     }
 }

@@ -9,25 +9,29 @@ import SwiftUI
 import Combine
 
 @MainActor class SearchViewModel: ObservableObject {
-    @Environment(\.modelContext) private var modelContext
-    @Query var apps: [AppInfo]
+    private let dataSoruce: AppInfoDataSource
     @Published var searchText : String = ""
     @Published var features: Features
+    @Published var apps: [AppInfo] = []
+    @Published var showResult: Bool
+    var filteredApps: [AppInfo] {
+        apps.filter {
+            if searchText.isEmpty {
+                return false
+            } else {
+                return $0.name.localizedStandardContains(searchText)
+            }
+        }
+    }
     
     private var task: Task<Void, Error>?
     private let formatter = ISO8601DateFormatter()
     private let service : SearchAPIService = SearchAPIService()
     
-    init () {
+    init (dataSource: AppInfoDataSource = AppInfoDataSource.shared) {
+        self.dataSoruce = dataSource
         self.features = Features(discovers: [], suggestedList: [])
-        
-        _apps = Query(filter: #Predicate<AppInfo> {
-                if searchText.isEmpty {
-                    return true
-                } else {
-                    return $0.name.localizedStandardContains(searchText)
-                }
-            })
+        self.showResult = false
         
         Task {
             do {
@@ -44,6 +48,10 @@ import Combine
         task?.cancel()
         task = Task {
             await requestSearch()
+            await MainActor.run {
+                self.showResult = false
+                self.apps = self.dataSoruce.objects(with: self.searchText)
+            }
         }
     }
     
@@ -51,7 +59,10 @@ import Combine
         task?.cancel()
         task = Task {
             await requestSearch()
-            // move to result page
+            await MainActor.run {
+                self.apps = self.dataSoruce.objects(with: self.searchText)
+                self.showResult = true
+            }
         }
     }
     
@@ -60,9 +71,7 @@ import Combine
             guard let result = try await self.service.run(with: self.searchText) else { return }
             if Task.isCancelled { return }
             
-            result.results.forEach {
-                self.modelContext.insert(AppInfo(model: $0))
-            }
+            self.dataSoruce.upsert(infos: result.results.compactMap { AppInfo(model: $0) } )
         } catch {
             
         }

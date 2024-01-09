@@ -13,6 +13,5 @@ struct SwiftUIAppstoreSearchApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [AppInfo.self])
     }
 }

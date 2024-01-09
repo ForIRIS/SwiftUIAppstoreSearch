@@ -9,8 +9,8 @@ import SwiftUI
 struct DiscoverView : View {
     var discovers: [String]
     let colums: [GridItem] = [
-        GridItem(.flexible(), spacing: 5),
-        GridItem(.flexible(), spacing: 5)
+        GridItem(.flexible(), spacing: 15),
+        GridItem(.flexible(), spacing: 15)
     ]
     
     var body: some View {
@@ -21,9 +21,16 @@ struct DiscoverView : View {
                     .bold()
                 Spacer()
             }
-            LazyVGrid(columns: colums) {
-                ForEach(discovers, id: \.self) {
-                    DiscoverViewCell(text: $0)
+            LazyVGrid(columns: colums, spacing: 0) {
+                let lastLineStart = discovers.count - max( 2, discovers.count % 2 )
+                ForEach(0..<discovers.count, id: \.self) { index in
+                    DiscoverViewCell(text: discovers[index])
+                        .overlay(
+                            Rectangle()
+                                .fill(index < lastLineStart ? Color.gray.opacity(0.1) : Color.clear)
+                                .frame(height: 1, alignment: .bottom),
+                            alignment: .bottom
+                        )
                 }
             }
         }
@@ -32,5 +39,5 @@ struct DiscoverView : View {
 }
 
 #Preview {
-    DiscoverView(discovers: ["Item1", "Item2"])
+    DiscoverView(discovers: ["Item1", "Item2", "Item3", "Item4", "Item5"])
 }

@@ -17,7 +17,7 @@ class FeaturesAPIService : APIService {
         
         do {
             guard let jsonUrl = Bundle.main.url(forResource: "features", withExtension: "json") else { throw NetworkError.badUrl }
-            let data = try await URLSession.shared.run(for: URLRequest(url: jsonUrl))
+            guard let data = try? Data(contentsOf: jsonUrl) else { throw NetworkError.badResponse }
             guard let decodedResponse = try? JSONDecoder().decode(T.self, from: data) else { throw NetworkError.failedToDecodeResponse }
             
             return decodedResponse

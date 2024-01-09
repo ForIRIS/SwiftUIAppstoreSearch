@@ -23,11 +23,13 @@ final class AppInfo {
     var lastUpdate: Date
     
     init(id: Int,
-        name: String) {
+         name: String,
+         seller: String = "",
+         iconUrl: String = "") {
         self.id = id
         self.name = name
-        self.iconUrl = ""
-        self.seller = ""
+        self.iconUrl = iconUrl
+        self.seller = seller
         self.appURL = ""
         self.genreName = ""
         self.screenshots = []
@@ -51,5 +53,41 @@ final class AppInfo {
         self.userRatingCount = model.userRatingCount ?? 0
         self.hitCount = 1
         self.lastUpdate = Date()
+    }
+}
+
+extension AppInfo {
+    func hasLandscapeScreenshot() -> Bool {
+        guard let urlString = screenshots.first else { return false }
+        
+        let pattern = #"/(\d+)x(\d+)bb"# // Assumes "widthxheightbb" format
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let range = NSRange(location: 0, length: urlString.utf16.count)
+
+        guard let match = regex.firstMatch(in: urlString, options: [], range: range) else {
+            return false
+        }
+
+        // Extract width and height from the matched range
+        if let widthRange = Range(match.range(at: 1), in: urlString),
+           let heightRange = Range(match.range(at: 2), in: urlString),
+           let width = Int(urlString[widthRange]),
+           let height = Int(urlString[heightRange]) {
+            return width > height
+        }
+        
+        return false
+    }
+    
+    func getThumbnails() -> [String] {
+        if hasLandscapeScreenshot() {
+            if let thumbnail = screenshots.first {
+                return [thumbnail]
+            }
+        } else if screenshots.count > 2  {
+            return Array<String>(screenshots[0..<3])
+        }
+        
+        return []
     }
 }

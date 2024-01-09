@@ -15,20 +15,29 @@ struct SuggestionView : View {
     ]
     
     var body: some View {
-        VStack(alignment:.leading) {
-            HStack {
-                Text("Suggested")
-                    .font(.title2)
-                    .bold()
-                Spacer()
-            }
-            LazyHGrid(rows: colums) {
-                ForEach(suggestedList, id: \.self) {
-                    SuggestedViewCell(model: $0)
+        ZStack {
+            VStack(alignment:.leading) {
+                HStack {
+                    Text("Suggested")
+                        .font(.title2)
+                        .bold()
+                    Spacer()
+                }
+                LazyVGrid(columns: colums) {
+                    let lastLineStart = suggestedList.count - 1
+                    ForEach(0..<suggestedList.count, id: \.self) { index in
+                        SuggestedViewCell(model: suggestedList[index])
+                        if index < lastLineStart {
+                            Rectangle()
+                                .fill(index < lastLineStart ? Color.gray.opacity(0.1) : Color.clear)
+                                .frame(height: 1, alignment: .bottom)
+                                .padding(.leading, 60)
+                        }
+                    }
                 }
             }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
 }
 

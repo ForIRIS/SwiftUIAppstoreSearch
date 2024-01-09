@@ -20,6 +20,20 @@ class AppModel : Decodable, Hashable {
     let userRatingCount : Int?
     let currentVersionReleaseDate: String?
     
+    init(id: Int, name: String, sellerName: String, artworkUrl60: String) {
+        self.trackId = id
+        self.trackName = name
+        self.trackViewUrl = ""
+        self.sellerName = sellerName
+        self.artworkUrl60 = artworkUrl60
+        self.artworkUrl100 = nil
+        self.primaryGenreName = nil
+        self.screenshotUrls = nil
+        self.averageUserRating = nil
+        self.userRatingCount = nil
+        self.currentVersionReleaseDate = nil
+    }
+    
     var appIconUrl: String {
         artworkUrl100 ?? artworkUrl60 ?? ""
     }

@@ -61,24 +61,18 @@ struct SearchCell: View {
                 .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
     }
     
     var previews: some View {
         HStack(alignment: .center, spacing: 10) {
-            if info.screenshots.isEmpty {
-                GeometryReader { geometry in
-                    Text("")
-                        .frame(width: geometry.size.width, height: geometry.size.width * (16.0 / 9))
-                }
-            } else {
-                ForEach(info.screenshots, id: \.self) { imageUrl in
-                    AsyncImage(url: URL(string: imageUrl)) {
-                        $0
-                            .resizable()
-                            .cornerRadius(8)
-                    } placeholder: {
-                        ProgressView()
-                    }
+            ForEach(info.getThumbnails(), id: \.self) { imageUrl in
+                AsyncImage(url: URL(string: imageUrl)) {
+                    $0
+                        .resizable()
+                        .cornerRadius(8)
+                } placeholder: {
+                    ProgressView()
                 }
             }
         }
