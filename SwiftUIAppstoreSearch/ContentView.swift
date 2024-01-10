@@ -12,7 +12,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $navPath) {
             SearchView()
-                .navigationTitle("Search")
+                .navigationBarBackButtonHidden()
                 .navigationDestination(for: AppInfo.self) { appInfo in
                     AppDetailView(info: appInfo)
                 }

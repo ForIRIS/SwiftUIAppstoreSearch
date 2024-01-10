@@ -17,6 +17,13 @@ struct SearchView: View {
                 searchableList
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Text("Search")
+                    .bold()
+                    .font(.largeTitle)
+            }
+        }
         .searchable(text: $viewModel.searchText,
                     isPresented: $viewModel.isSearching,
                     prompt: "Games, Apps, Stories and More")
