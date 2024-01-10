@@ -15,7 +15,12 @@ import Combine
     @Published var isSearching : Bool = false
     @Published var features: Features
     @Published var apps: [AppInfo] = []
-    @Published var showResult: Bool
+    @Published var showResult: Bool = false
+    
+    var showFeatures: Bool {
+        return !(isSearching || showResult)
+    }
+    
     var filteredApps: [AppInfo] {
         apps.filter {
             if searchText.isEmpty {
@@ -65,28 +70,22 @@ import Combine
         runTask?.cancel()
         runTask = Task {
             await requestSearch()
+            
+            // for Update UI
             await MainActor.run {
                 self.apps = self.dataSoruce.objects(with: self.searchText)
                 self.showResult = true
             }
+            
+            runTask = nil
         }
     }
     
     
     func runSearch(with keyword: String) {
-        task?.cancel()
-        runTask?.cancel()
-        
         self.searchText = keyword
         if self.isSearching != true { self.isSearching = true }
-        
-        runTask = Task {
-            await requestSearch()
-            await MainActor.run {
-                self.apps = self.dataSoruce.objects(with: self.searchText)
-                self.showResult = true
-            }
-        }
+        self.runSearch()
     }
     
     func requestSearch() async {

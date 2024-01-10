@@ -18,12 +18,8 @@ class SearchAPIService : APIService {
     private let limit = 10
     
     func run(with keyword: String) async throws -> T? {
-        guard let titleForSearch = keyword.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) else {
-            fatalError("Cannot add %20 to search text")
-        }
-        
         do {
-            let request = try makeRequest(titleForSearch)
+            let request = try makeRequest(keyword)
             let data = try await URLSession.shared.run(for: request)
             guard let decodedResponse = try? JSONDecoder().decode(T.self, from: data) else { throw NetworkError.failedToDecodeResponse }
             

@@ -31,13 +31,21 @@ struct AppDetailView: View {
                 Divider()
                 makeScreenShots()
                 if !info.releaseNotes.isEmpty {
+                    Text("Release notes")
+                        .font(.subheadline)
+                        .padding()
                     Text(info.releaseNotes)
                         .font(.caption)
+                        .padding(.horizontal)
                 }
                 
                 if !info.appDescription.isEmpty {
+                    Text("Description")
+                        .font(.subheadline)
+                        .padding()
                     Text(info.appDescription)
                         .font(.caption)
+                        .padding(.horizontal)
                 }
             }
         }

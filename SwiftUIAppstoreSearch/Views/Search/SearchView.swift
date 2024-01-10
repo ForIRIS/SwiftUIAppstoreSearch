@@ -11,7 +11,7 @@ struct SearchView: View {
 
     var body: some View {
         ZStack {
-            if viewModel.filteredApps.isEmpty {
+            if viewModel.showFeatures {
                 features
             } else {
                 searchableList
@@ -24,6 +24,7 @@ struct SearchView: View {
         .onChange(of: viewModel.searchText, viewModel.searching)
         .onSubmit(of: .search, viewModel.runSearch)
         .environmentObject(viewModel)
+        .scrollDismissesKeyboard(.immediately)
     }
     
     var features: some View {

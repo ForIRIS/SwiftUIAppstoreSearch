@@ -24,11 +24,14 @@ final class AppInfoDataSource {
     func upsert(infos: [AppInfo]) {
         do {
             for info in infos {
-                if let oldAppInfo = try self.object(id: info.id),
-                   oldAppInfo.currentVersionReleaseDate < info.currentVersionReleaseDate {
-                    modelContext.delete(oldAppInfo)
+                if let oldAppInfo = try self.object(id: info.id) {
+                    if oldAppInfo.currentVersionReleaseDate < info.currentVersionReleaseDate {
+                        modelContext.delete(oldAppInfo)
+                    } else {
+                        continue
+                    }
                 }
-                
+                   
                 modelContext.insert(info)
             }
             
