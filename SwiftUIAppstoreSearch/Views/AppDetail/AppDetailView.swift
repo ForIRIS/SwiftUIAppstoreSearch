@@ -5,10 +5,9 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct AppDetailView: View {
-    @State private var icon: UIImage?
-    @State private var screenShots: [UIImage] = [UIImage]()
     @State private var showToolbar: Bool = false
     @State private var idealSize: CGSize = .zero
     @Environment(\.openURL) var openURL
@@ -31,14 +30,45 @@ struct AppDetailView: View {
                 AppBasicInfoView(info: self.info)
                 Divider()
                 makeScreenShots()
+                if !info.releaseNotes.isEmpty {
+                    Text(info.releaseNotes)
+                        .font(.caption)
+                }
+                
+                if !info.appDescription.isEmpty {
+                    Text(info.appDescription)
+                        .font(.caption)
+                }
             }
         }
+        .background(
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear {
+                        idealSize = proxy.size
+                    }
+            }
+        )
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                if self.showToolbar {
+                    CachedAsyncImage(url: URL(string:info.iconUrl)) { image in
+                        image
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .cornerRadius(4)
+                    } placeholder: {
+                        Image(uiImage: placeholderImg)
+                    }
+                } else {
+                    Spacer()
+                }
+            }
+            
             ToolbarItem(placement: .primaryAction) {
                 if self.showToolbar {
                     Button {
-                        
                         openURL(URL(string: info.appURL)!)
                     } label: {
                         Text("Get")
@@ -62,25 +92,23 @@ struct AppDetailView: View {
     
     // MARK - Screenshot lists
     func makeScreenShots() -> some View {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    if screenShots.count > 0 {
-                        ForEach(screenShots, id: \.self) { image in
-                            Image(uiImage: image)
-                                .resizable()
-                                .frame(width: self.idealSize.width, height:self.idealSize.height)
-                                .cornerRadius(12)
+        ScrollView(.horizontal) {
+            LazyHGrid(rows: [GridItem(.flexible())]) {
+                ForEach(info.screenshots, id: \.self) { imageUrl in
+                    if let (width, height) = info.getScreenshotSize() {
+                        CachedAsyncImage(url: URL(string: imageUrl)) {
+                            $0.resizable()
+                              .aspectRatio(CGSize(width: width, height: height), contentMode: .fit)
+                              .frame(maxWidth: self.idealSize.width - 20, maxHeight: self.idealSize.width)
+                              .cornerRadius(8)
+                        } placeholder: {
+                            ProgressView()
                         }
-                    } else {
-                        Text("")
-                            .frame(width: self.idealSize.width, height:self.idealSize.height)
                     }
                 }
-                .frame(height: self.idealSize.height + 10) // Plus top, bottom margin
-                .aspectRatio(contentMode: .fill)
-                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
             }
-            .frame(height:self.idealSize.height + 10)
+        }
+        .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
     }
 }
 

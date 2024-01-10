@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct DiscoverView : View {
+    @EnvironmentObject var viewModel: SearchViewModel
+    
     var discovers: [String]
     let colums: [GridItem] = [
         GridItem(.flexible(), spacing: 15),
@@ -31,6 +33,9 @@ struct DiscoverView : View {
                                 .frame(height: 1, alignment: .bottom),
                             alignment: .bottom
                         )
+                        .onTapGesture {
+                            viewModel.runSearch(with:discovers[index])
+                        }
                 }
             }
         }

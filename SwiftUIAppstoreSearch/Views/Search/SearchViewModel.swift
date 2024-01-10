@@ -10,7 +10,9 @@ import Combine
 
 @MainActor class SearchViewModel: ObservableObject {
     private let dataSoruce: AppInfoDataSource
+    
     @Published var searchText : String = ""
+    @Published var isSearching : Bool = false
     @Published var features: Features
     @Published var apps: [AppInfo] = []
     @Published var showResult: Bool
@@ -25,6 +27,7 @@ import Combine
     }
     
     private var task: Task<Void, Error>?
+    private var runTask: Task<Void, Error>?
     private let formatter = ISO8601DateFormatter()
     private let service : SearchAPIService = SearchAPIService()
     
@@ -45,6 +48,8 @@ import Combine
     }
     
     func searching() {
+        if let runTask = runTask, !runTask.isCancelled { return }
+        
         task?.cancel()
         task = Task {
             await requestSearch()
@@ -57,7 +62,25 @@ import Combine
     
     func runSearch() {
         task?.cancel()
-        task = Task {
+        runTask?.cancel()
+        runTask = Task {
+            await requestSearch()
+            await MainActor.run {
+                self.apps = self.dataSoruce.objects(with: self.searchText)
+                self.showResult = true
+            }
+        }
+    }
+    
+    
+    func runSearch(with keyword: String) {
+        task?.cancel()
+        runTask?.cancel()
+        
+        self.searchText = keyword
+        if self.isSearching != true { self.isSearching = true }
+        
+        runTask = Task {
             await requestSearch()
             await MainActor.run {
                 self.apps = self.dataSoruce.objects(with: self.searchText)

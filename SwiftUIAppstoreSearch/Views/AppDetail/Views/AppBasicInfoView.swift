@@ -5,6 +5,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct AppBasicInfoView : View {
     @Environment(\.openURL) private var openURL
@@ -14,7 +15,7 @@ struct AppBasicInfoView : View {
     
     var body: some View {
         HStack {
-            AsyncImage(url: URL(string:info.iconUrl)) { image in
+            CachedAsyncImage(url: URL(string:info.iconUrl)) { image in
                 image
                     .resizable()
                     .frame(width: 120, height: 120)
@@ -26,13 +27,11 @@ struct AppBasicInfoView : View {
             
             VStack {
                 HStack {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text(info.name)
                             .font(.title2)
                             .fontWeight(.medium)
                             .lineLimit(2)
-                        
-                        Spacer(minLength: 2)
                         
                         Text(info.seller)
                             .font(.subheadline)

@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @ObservedObject private var viewModel = SearchViewModel()
+    @StateObject private var viewModel = SearchViewModel()
 
     var body: some View {
         ZStack {
@@ -18,10 +18,12 @@ struct SearchView: View {
             }
         }
         .searchable(text: $viewModel.searchText,
+                    isPresented: $viewModel.isSearching,
                     prompt: "Games, Apps, Stories and More")
         .onAppear(perform: viewModel.searching)
         .onChange(of: viewModel.searchText, viewModel.searching)
         .onSubmit(of: .search, viewModel.runSearch)
+        .environmentObject(viewModel)
     }
     
     var features: some View {
@@ -41,7 +43,9 @@ struct SearchView: View {
             LazyVGrid(columns: [GridItem()]) {
                 ForEach(viewModel.filteredApps) { item in
                     if viewModel.showResult {
-                        SearchCell(info: item)
+                        NavigationLink(value: item) {
+                            SearchCell(info: item)
+                        }.buttonStyle(.plain)
                     } else {
                         SearchableCell(text: item.name)
                             .onTapGesture {

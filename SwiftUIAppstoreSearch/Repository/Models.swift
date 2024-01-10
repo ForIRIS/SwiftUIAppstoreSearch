@@ -17,10 +17,11 @@ final class AppInfo {
     var genreName: String
     var screenshots: [String]
     var currentVersionReleaseDate: String
-    var averageRating: Double
+    var averageRating: Float
     var userRatingCount: Int
-    var hitCount: Int
     var lastUpdate: Date
+    var releaseNotes: String
+    var appDescription: String
     
     init(id: Int,
          name: String,
@@ -36,8 +37,9 @@ final class AppInfo {
         self.currentVersionReleaseDate = Date().toISO8601String()
         self.averageRating = 0
         self.userRatingCount = 0
-        self.hitCount = 1
         self.lastUpdate = Date()
+        self.releaseNotes = ""
+        self.appDescription = ""
     }
     
     init(model: AppModel) {
@@ -49,9 +51,10 @@ final class AppInfo {
         self.genreName = model.primaryGenreName ?? ""
         self.screenshots = model.screenshotUrls ?? []
         self.currentVersionReleaseDate = model.currentVersionReleaseDate ?? Date().toISO8601String()
-        self.averageRating = model.averageUserRating ?? 0
+        self.averageRating = Float(model.averageUserRating ?? 0)
         self.userRatingCount = model.userRatingCount ?? 0
-        self.hitCount = 1
+        self.releaseNotes = model.releaseNotes ?? ""
+        self.appDescription = model.description ?? ""
         self.lastUpdate = Date()
     }
 }
@@ -77,6 +80,28 @@ extension AppInfo {
         }
         
         return false
+    }
+    
+    func getScreenshotSize() -> (Double, Double)? {
+        guard let urlString = screenshots.first else { return nil }
+        
+        let pattern = #"/(\d+)x(\d+)bb"# // Assumes "widthxheightbb" format
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let range = NSRange(location: 0, length: urlString.utf16.count)
+
+        guard let match = regex.firstMatch(in: urlString, options: [], range: range) else {
+            return nil
+        }
+
+        // Extract width and height from the matched range
+        if let widthRange = Range(match.range(at: 1), in: urlString),
+           let heightRange = Range(match.range(at: 2), in: urlString),
+           let width = Double(urlString[widthRange]),
+           let height = Double(urlString[heightRange]) {
+            return (width, height)
+        }
+        
+        return nil
     }
     
     func getThumbnails() -> [String] {

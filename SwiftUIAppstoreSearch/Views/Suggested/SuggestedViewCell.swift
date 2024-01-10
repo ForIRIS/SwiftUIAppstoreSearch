@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CachedAsyncImage
 
 struct SuggestedViewCell : View {
     @Environment(\.openURL) var openURL
@@ -13,22 +14,30 @@ struct SuggestedViewCell : View {
     
     var body: some View {
         HStack(alignment: .center) {
-            AsyncImage(url: URL(string:model.appIconUrl)) { image in
+            CachedAsyncImage(url: URL(string:model.appIconUrl)) { image in
                 image
                     .resizable()
-                    .frame(width: 60, height: 60)
             } placeholder: {
-                ProgressView()
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundStyle(.quaternary)
+                    ProgressView()
+                }
             }
+            .frame(width: 60, height: 60)
             .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(.gray.opacity(0.1), lineWidth: 1)
+            )
             
             VStack(alignment: .leading) {
                 Text(model.trackName)
-                    .font(.title3)
+                    .font(.subheadline)
                     .foregroundStyle(.primary)
                 if let sellerName = model.sellerName {
                     Text(sellerName)
-                        .font(.caption)
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }

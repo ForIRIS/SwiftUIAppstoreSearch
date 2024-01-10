@@ -26,7 +26,9 @@ struct SuggestionView : View {
                 LazyVGrid(columns: colums) {
                     let lastLineStart = suggestedList.count - 1
                     ForEach(0..<suggestedList.count, id: \.self) { index in
-                        SuggestedViewCell(model: suggestedList[index])
+                        NavigationLink(value: AppInfo(model: suggestedList[index]) ) {
+                            SuggestedViewCell(model: suggestedList[index])
+                        }.buttonStyle(.plain)
                         if index < lastLineStart {
                             Rectangle()
                                 .fill(index < lastLineStart ? Color.gray.opacity(0.1) : Color.clear)

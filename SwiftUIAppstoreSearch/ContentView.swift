@@ -16,9 +16,6 @@ struct ContentView: View {
                 .navigationDestination(for: AppInfo.self) { appInfo in
                     AppDetailView(info: appInfo)
                 }
-                .navigationDestination(for: [AppInfo].self) { appInfos in
-                    SearchResultView(list: appInfos)
-                }
         }
     }
 }

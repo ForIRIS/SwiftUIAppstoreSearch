@@ -1,5 +1,5 @@
 //
-//  Double+rReduceScale.swift
+//  Double+reduceScale.swift
 //  SwiftUIAppstoreSearch
 //
 // Author : stackoverflow @ fake girlfriends

@@ -19,6 +19,8 @@ class AppModel : Decodable, Hashable {
     let averageUserRating : Double?
     let userRatingCount : Int?
     let currentVersionReleaseDate: String?
+    let releaseNotes: String?
+    let description: String?
     
     init(id: Int, name: String, sellerName: String, artworkUrl60: String) {
         self.trackId = id
@@ -32,6 +34,8 @@ class AppModel : Decodable, Hashable {
         self.averageUserRating = nil
         self.userRatingCount = nil
         self.currentVersionReleaseDate = nil
+        self.releaseNotes = nil
+        self.description = nil
     }
     
     var appIconUrl: String {

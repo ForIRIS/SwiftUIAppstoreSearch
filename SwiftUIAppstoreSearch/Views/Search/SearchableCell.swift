@@ -10,16 +10,17 @@ import SwiftUI
 struct SearchableCell : View {
     let text: String
     var body: some View {
-        VStack(spacing: 4) {
+        VStack {
             HStack(alignment: .center, spacing: 5) {
                 Image(systemName: "magnifyingglass")
-                Text(text)
+                    .foregroundStyle(.secondary)
+                Text(text).font(.caption)
                 Spacer()
             }
-            .foregroundStyle(.secondary)
+            .padding(.vertical, 5)
             Divider()
         }
-        .padding(EdgeInsets(top: 15, leading: 5, bottom: 5, trailing: 15))
+        .padding(.horizontal)
     }
 }
 

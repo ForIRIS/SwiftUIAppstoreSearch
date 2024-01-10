@@ -1,9 +1,11 @@
 {
     "discovers" : [
         "Microsoft Word",
-        "Pixelmator Pro",
+        "Pixelmator",
         "Amazon",
-        "Stray"
+        "Stray",
+        "Google Maps",
+        "SODA"
     ],
     "suggestedList" : [
         {"features":["gameCenter", "iosUniversal"], "advisories":["Infrequent/Mild Sexual Content and Nudity", "Infrequent/Mild Cartoon or Fantasy Violence"], "isGameCenterEnabled":true,
