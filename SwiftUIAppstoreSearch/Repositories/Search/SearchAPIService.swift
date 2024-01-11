@@ -6,7 +6,7 @@
 
 import Foundation
 
-class SearchAPIService : APIService {
+actor SearchAPIService : APIService {
     typealias T = SearchResult
     
     private static let kTerm = "term"

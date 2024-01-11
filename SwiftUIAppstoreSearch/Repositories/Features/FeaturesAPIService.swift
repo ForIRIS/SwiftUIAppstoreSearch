@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FeaturesAPIService : APIService {
+actor FeaturesAPIService : APIService {
     typealias T = Features
     
     func run(with keyword: String) async throws -> T? {
