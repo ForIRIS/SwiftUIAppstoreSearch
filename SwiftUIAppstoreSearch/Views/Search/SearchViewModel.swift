@@ -8,14 +8,15 @@ import SwiftData
 import SwiftUI
 import Combine
 
-@MainActor class SearchViewModel: ObservableObject {
+@Observable
+class SearchViewModel {
     private let dataSoruce: AppInfoDataSource
+    private var apps: [AppInfo] = []
     
-    @Published var searchText : String = ""
-    @Published var isSearching : Bool = false
-    @Published var features: Features
-    @Published var apps: [AppInfo] = []
-    @Published var showResult: Bool = false
+    var searchText : String = ""
+    var isSearching : Bool = false
+    var features: Features
+    var showResult: Bool
     
     var showFeatures: Bool {
         return !(isSearching || showResult)
@@ -33,7 +34,6 @@ import Combine
     
     private var task: Task<Void, Error>?
     private var runTask: Task<Void, Error>?
-    private let formatter = ISO8601DateFormatter()
     private let service : SearchAPIService = SearchAPIService()
     
     init (dataSource: AppInfoDataSource = AppInfoDataSource.shared) {

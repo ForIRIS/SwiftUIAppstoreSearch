@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @StateObject private var viewModel = SearchViewModel()
+    @State private var viewModel = SearchViewModel()
 
     var body: some View {
         ZStack {
@@ -27,10 +27,9 @@ struct SearchView: View {
         .searchable(text: $viewModel.searchText,
                     isPresented: $viewModel.isSearching,
                     prompt: "Games, Apps, Stories and More")
-        .onAppear(perform: viewModel.searching)
         .onChange(of: viewModel.searchText, viewModel.searching)
         .onSubmit(of: .search, viewModel.runSearch)
-        .environmentObject(viewModel)
+        .environment(viewModel)
         .scrollDismissesKeyboard(.immediately)
     }
     

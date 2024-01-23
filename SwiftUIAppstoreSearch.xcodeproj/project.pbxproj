@@ -189,6 +189,19 @@
 			path = DataSource;
 			sourceTree = "<group>";
 		};
+		082441FC2B5C39A300BC0A3A /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				FA430D9028B96F82005B3B4F /* Date+DiffHours.swift */,
+				FA1A6B1228BD7D92003BA248 /* Double+reduceScale.swift */,
+				FA430D8828B91FAD005B3B4F /* UIImage+Decoded.swift */,
+				FA430D8E28B9580E005B3B4F /* URL+Image.swift */,
+				FA430D9928BAF294005B3B4F /* URLSession+Request.swift */,
+				08B2EA5D2B4E36720012CF19 /* URLCache+imageCache.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		FA1A6B0728BD6AA9003BA248 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,15 +223,10 @@
 		FA7142BF28BD420600E63711 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				082441FC2B5C39A300BC0A3A /* Extension */,
 				FA1A6B0328BD539F003BA248 /* CustomScrollView.swift */,
-				FA430D9028B96F82005B3B4F /* Date+DiffHours.swift */,
-				FA1A6B1228BD7D92003BA248 /* Double+reduceScale.swift */,
 				0805EF392B48C5100087013B /* NetworkError.swift */,
 				FA1A6B0C28BD6FDF003BA248 /* StarRatingView.swift */,
-				FA430D8828B91FAD005B3B4F /* UIImage+Decoded.swift */,
-				FA430D8E28B9580E005B3B4F /* URL+Image.swift */,
-				FA430D9928BAF294005B3B4F /* URLSession+Request.swift */,
-				08B2EA5D2B4E36720012CF19 /* URLCache+imageCache.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";

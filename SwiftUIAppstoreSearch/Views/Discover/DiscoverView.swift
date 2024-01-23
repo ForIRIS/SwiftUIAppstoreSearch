@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct DiscoverView : View {
-    @EnvironmentObject var viewModel: SearchViewModel
+    @Environment(SearchViewModel.self) var viewModel: SearchViewModel
     
     var discovers: [String]
     let colums: [GridItem] = [
