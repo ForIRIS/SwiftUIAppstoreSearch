@@ -24,12 +24,9 @@ final class AppInfoDataSource {
     func upsert(infos: [AppInfo]) {
         do {
             for info in infos {
-                if let oldAppInfo = try self.object(id: info.id) {
-                    if oldAppInfo.currentVersionReleaseDate < info.currentVersionReleaseDate {
-                        modelContext.delete(oldAppInfo)
-                    } else {
-                        continue
-                    }
+                if let oldAppInfo = try self.object(id: info.id),
+                   oldAppInfo.currentVersionReleaseDate < info.currentVersionReleaseDate {
+                    modelContext.delete(oldAppInfo)
                 }
                    
                 modelContext.insert(info)
@@ -42,12 +39,11 @@ final class AppInfoDataSource {
     }
     
     func object(id: Int) throws -> AppInfo? {
-        let predicate = #Predicate<AppInfo> { $0.id == id }
-        var descriptor = FetchDescriptor(predicate: predicate)
-        descriptor.fetchLimit = 1
-        var objects = try modelContext.fetch(descriptor)
+        if let object = try modelContext.model(for: id) as? AppInfo {
+            return object
+        }
         
-        return objects.first
+        return nil
     }
     
     func objects() -> [AppInfo] {
